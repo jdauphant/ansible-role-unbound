@@ -1,0 +1,27 @@
+---
+- name: install unbound for Debian OS family
+  apt: pkg=unbound state={{ unbound_pkg_state }}
+  when: ansible_os_family == 'Debian'
+  tags: ["packages","unbound"]
+
+- name: install unbound for RedHat OS family
+  yum: name=unbound state={{ unbound_pkg_state }}
+  when: ansible_os_family == 'RedHat'
+  tags: ["packages","unbound"]
+
+- name: configure unbound
+  template: 
+     src=unbound.conf.j2
+     dest=/etc/unbound/unbound.conf
+     validate="/usr/sbin/unbound-checkconf %s"
+  notify: restart unbound
+  tags: ["configuration","unbound"]
+
+- name: ensure unbound is started/stopped
+  service: 
+     name=unbound
+     state={{ unbound_service_state }}
+     enabled={{ unbound_service_enabled }}
+     pattern="/unbound"
+  tags: ["service","unbound"]
+

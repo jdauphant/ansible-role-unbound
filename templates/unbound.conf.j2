@@ -1,0 +1,60 @@
+# {{ ansible_managed }}
+# See the unbound.conf(5) man page.
+#
+# See /usr/share/doc/unbound/examples/unbound.conf for a commented
+# reference config file.
+
+server:
+    # The following line will configure unbound to perform cryptographic
+    # DNSSEC validation using the root trust anchor.
+{% for config in unbound_configuration %}
+    {{ config.keys().0 }}: {{ config.values().0 }}
+{% endfor %}
+    auto-trust-anchor-file: "/var/lib/unbound/root.key"
+{% for interface in unbound_interfaces %}
+    interface: {{interface}}
+{% endfor %}
+{% for access_control in unbound_access_control %}
+    access-control: {{access_control}}
+{% endfor %}
+
+    hide-identity: yes
+    hide-version: yes
+
+{% for private_address in unbound_private_address %}
+    private-address: {{private_address}}
+{% endfor %}
+
+{% for domain in unbound_domains.keys() %}
+    local-zone: "{{domain}}." static
+{% for host in unbound_domains[domain] %}
+    local-data: "{{ host.keys().0 }}.{{ domain }}. {{ host.values().0 }}{% if host.values().0 | match(".*CNAME.*[^.]") %}{{ domain }}.{% endif %}"
+
+{% endfor %}
+{% endfor %}
+
+{% for domain in unbound_domains_with_reverses.keys() %}
+    local-zone: "{{domain}}." {{unbound_domains_type[host] | default('static')}}
+{% for host in unbound_domains_with_reverses[domain] %}
+    local-data: "{{ host.keys().0 }}.{{ domain }}. IN A {{ host.values().0 }}"
+    local-data-ptr: "{{ host.values().0 }} {{ host.keys().0 }}.{{ domain }}"
+{% endfor %}
+{% endfor %}
+
+{% if unbound_add_inventory_hosts %}
+    local-zone: "{{unbound_inventory_domain}}." {{unbound_domains_type[host] | default('static')}}
+{% for host in hostvars.keys() %}
+    local-data: "{{ host }}.{{ unbound_inventory_domain }}. IN A {{ hostvars[host][ 'ansible_ssh_host'] }}"
+{% if unbound_add_inventory_hosts_reverse %}
+    local-data-ptr: "{{ hostvars[host]['ansible_ssh_host'] }} {{ host }}.{{ unbound_inventory_domain }}."
+{% endif %}
+{% endfor %}
+{% endif %}
+
+{% if unbound_forward_zone_active %}
+    forward-zone:
+        name: "."
+{% for forward_addr in unbound_forward_zone %}
+        forward-addr: {{forward_addr}}
+{% endfor %}      
+{% endif %}

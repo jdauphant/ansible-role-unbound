@@ -1,0 +1,56 @@
+---
+unbound_configuration:
+    - verbosity: 1
+    - do-ip4: "yes"
+    - do-ip6: "no"
+    - num-threads: 1
+    - pidfile: "/var/run/unbound.pid"
+
+unbound_interfaces: 
+    - 127.0.0.1
+
+unbound_access_control:
+    - 127.0.0.1 allow
+
+unbound_private_address:
+    - 10.0.0.0/8
+    - 172.16.0.0/12
+    - 192.168.0.0/16
+    - 169.254.0.0/16 
+    - "fd00::/8"
+    - "fe80::/10"
+
+
+unbound_domains:
+    example.com:
+      - host1: IN A 127.0.0.1
+      - www: IN CNAME host1
+
+unbound_domains_with_reverses:
+    reversed.example.com:
+      - host1: 127.0.0.1
+      - host2: 127.0.0.2
+      - host3: 127.0.0.3
+
+unbound_domains_type:
+    example.com: "transparent"
+    reversed.example.com: "static"
+
+
+unbound_add_inventory_hosts: false # ansible_ssh_host need to be set on all hosts in the inventory
+unbound_inventory_domain: 'localdomain'
+
+unbound_forward_zone_active : true
+unbound_forward_zone:
+   - 8.8.8.8 #Google DNS
+   - 8.8.4.4 #Google DNS
+
+# Package states: installed or latest
+unbound_pkg_state: installed
+
+# Service states: started or stopped
+unbound_service_state: started
+
+# Service enabled on startup: yes or no
+unbound_service_enabled: yes
+
