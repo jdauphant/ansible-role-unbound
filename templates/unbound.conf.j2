@@ -34,7 +34,7 @@ server:
 {% endfor %}
 
 {% for domain in unbound_domains_with_reverses.keys() %}
-    local-zone: "{{domain}}." {{unbound_domains_type[host] | default('static')}}
+    local-zone: "{{domain}}." {{unbound_domains_type[domain] | default('static')}}
 {% for host in unbound_domains_with_reverses[domain] %}
     local-data: "{{ host.keys().0 }}.{{ domain }}. IN A {{ host.values().0 }}"
     local-data-ptr: "{{ host.values().0 }} {{ host.keys().0 }}.{{ domain }}"
@@ -42,7 +42,7 @@ server:
 {% endfor %}
 
 {% if unbound_add_inventory_hosts %}
-    local-zone: "{{unbound_inventory_domain}}." {{unbound_domains_type[host] | default('static')}}
+    local-zone: "{{unbound_inventory_domain}}." {{unbound_domains_type[unbound_inventory_domain] | default('static')}}
 {% for host in hostvars.keys() %}
     local-data: "{{ host }}.{{ unbound_inventory_domain }}. IN A {{ hostvars[host][ 'ansible_ssh_host'] }}"
 {% if unbound_add_inventory_hosts_reverse %}
