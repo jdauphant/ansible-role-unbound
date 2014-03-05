@@ -20,32 +20,22 @@ unbound_private_address:
     - "fd00::/8"
     - "fe80::/10"
 
+unbound_domains: {}
 
-unbound_domains:
-    example.com:
-      - host1: IN A 127.0.0.1
-      - www: IN CNAME host1
+unbound_domains_with_reverses: {}
 
-unbound_domains_with_reverses:
-    reversed.example.com:
-      - host1: 127.0.0.1
-      - host2: 127.0.0.2
-      - host3: 127.0.0.3
+unbound_inventory_domain: {}
 
-unbound_inventory_domain:
-    all: 'localdomain'
-    webserver: 'webserver.localdomain'
+unbound_local_zone_type: {}
 
-unbound_local_zone_type:
-    example.com: "transparent"
-    reversed.example.com: "static"
+unbound_default_local_zone: "static"
 
 unbound_inventory_reverse_domain: {{unbound_inventory_domain}}
 
 unbound_forward_zone_active : true
 unbound_forward_zone:
-   - 8.8.8.8 #Google DNS
-   - 8.8.4.4 #Google DNS
+   - 8.8.8.8 #Google DNS 1
+   - 8.8.4.4 #Google DNS 2
 
 # Package states: installed or latest
 unbound_pkg_state: installed

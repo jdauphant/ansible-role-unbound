@@ -26,7 +26,7 @@ server:
 {% endfor %}
 
 {% for domain in unbound_domains.keys() %}
-    local-zone: "{{domain}}." static
+    local-zone: "{{domain}}." {{unbound_local_zone_type[domain] | default(unbound_default_local_zone)}}
 {% for host in unbound_domains[domain] %}
     local-data: "{{ host.keys().0 }}.{{ domain }}. {{ host.values().0 }}{% if host.values().0 | match(".*CNAME.*[^.]") %}{{ domain }}.{% endif %}"
 
@@ -34,7 +34,7 @@ server:
 {% endfor %}
 
 {% for domain in unbound_domains_with_reverses.keys() %}
-    local-zone: "{{domain}}." {{unbound_local_zone_type[domain] | default('static')}}
+    local-zone: "{{domain}}." {{unbound_local_zone_type[domain] | default(unbound_default_local_zone)}}
 {% for host in unbound_domains_with_reverses[domain] %}
     local-data: "{{ host.keys().0 }}.{{ domain }}. IN A {{ host.values().0 }}"
     local-data-ptr: "{{ host.values().0 }} {{ host.keys().0 }}.{{ domain }}"
@@ -43,7 +43,7 @@ server:
 
 
 {% for group, domain in unbound_inventory_domain.iteritems() %}
-    local-zone: "{{domain}}." {{unbound_local_zone_type[unbound_inventory_domain] | default('static')}}
+    local-zone: "{{domain}}." {{unbound_local_zone_type[unbound_inventory_domain] | default(unbound_default_local_zone)}}
 {% endfor %}
 
 {% for group, domain in unbound_inventory_domain.iteritems() %}
