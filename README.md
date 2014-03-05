@@ -8,6 +8,7 @@ Ansible role for Unbound DNS Server and resolver
 - Add DNS entries
 - Generation of DNS entries from ansible inventory (A entries and reverse)
 - Forward to another dns
+- IPv4 only for reverse
 
 # Information :
 - Test on Ubuntu
@@ -68,16 +69,16 @@ unbound_access_control:
 
 # Simple DNS entries
 unbound_domains:
-    example.com:
-      - host1: IN A 127.0.0.1
-      - www: IN CNAME host1
+    - domain_name: "example.com"
+      host1: IN A 127.0.0.1
+      www: IN CNAME host1
 
 # Create entry and reverse
 unbound_domains_with_reverses:
-    reversed.example.com:
-      - host1: 127.0.0.1
-      - host2: 127.0.0.2
-      - host3: 127.0.0.3
+    - domain_name: "reversed.example.com"
+      host1: 127.0.0.1
+      host2: 127.0.0.2
+      host3: 127.0.0.3
 
 # Create entries from inventory
 unbound_inventory_domain:

@@ -25,22 +25,24 @@ server:
     private-address: {{private_address}}
 {% endfor %}
 
-{% for domain in unbound_domains.keys() %}
-    local-zone: "{{domain}}." {{unbound_local_zone_type[domain] | default(unbound_default_local_zone)}}
-{% for host in unbound_domains[domain] %}
-    local-data: "{{ host.keys().0 }}.{{ domain }}. {{ host.values().0 }}{% if host.values().0 | match(".*CNAME.*[^.]") %}{{ domain }}.{% endif %}"
-
+{% for domain in unbound_domains %}
+    local-zone: "{{domain.domain_name}}." {{unbound_local_zone_type[domain.domain_name] | default(unbound_default_local_zone)}}
+{% for subdomain, entry in domain.iteritems() %}
+{% if subdomain != "domain_name" %}
+    local-data: "{{ subdomain }}.{{ domain.domain_name }}. {{ entry }}{% if entry | match(".*CNAME.*[^.]") %}.{{ domain.domain_name }}.{% endif %}"
+{% endif %}
 {% endfor %}
 {% endfor %}
 
-{% for domain in unbound_domains_with_reverses.keys() %}
-    local-zone: "{{domain}}." {{unbound_local_zone_type[domain] | default(unbound_default_local_zone)}}
-{% for host in unbound_domains_with_reverses[domain] %}
-    local-data: "{{ host.keys().0 }}.{{ domain }}. IN A {{ host.values().0 }}"
-    local-data-ptr: "{{ host.values().0 }} {{ host.keys().0 }}.{{ domain }}"
+{% for domain in unbound_domains_with_reverses %}
+    local-zone: "{{domain.domain_name}}." {{unbound_local_zone_type[domain.domain_name] | default(unbound_default_local_zone)}}
+{% for subdomain, ip in domain.iteritems() %}
+{% if subdomain != "domain_name" %}
+    local-data: "{{ subdomain }}.{{ domain.domain_name }}. IN A {{ ip }}"
+    local-data-ptr: "{{ ip }} {{ subdomain }}.{{ domain.domain_name }}"
+{% endif %}
 {% endfor %}
 {% endfor %}
-
 
 {% for group, domain in unbound_inventory_domain.iteritems() %}
     local-zone: "{{domain}}." {{unbound_local_zone_type[unbound_inventory_domain] | default(unbound_default_local_zone)}}
