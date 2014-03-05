@@ -30,7 +30,7 @@ unbound_local_zone_type: {}
 
 unbound_default_local_zone: "static"
 
-unbound_inventory_reverse_domain: {}
+unbound_inventory_reverse_domain: "{{unbound_inventory_domain}}"
 
 unbound_forward_zone_active : true
 unbound_forward_zone:

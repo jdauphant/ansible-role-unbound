@@ -57,7 +57,7 @@ server:
 {% for group, domain in unbound_inventory_reverse_domain.iteritems() %}
     # Reverse for group {{group}}
 {% for host in groups[group] %}
-    local-data-ptr: "{{ hostvars[host]['ansible_ssh_host'] }} {{ host }}.{{ unbound_inventory_domain }}.
+    local-data-ptr: "{{ hostvars[host]['ansible_ssh_host'] }} {{ host }}.{{ domain }}."
 {% endfor %}
 {% endfor %}
 
