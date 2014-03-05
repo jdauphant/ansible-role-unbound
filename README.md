@@ -41,6 +41,10 @@ unbound_access_control:
 unbound_inventory_domain:
     all: 'internal.domain' # All hosts
 
+# Create reverse entries from inventory
+unbound_inventory_reverse_domain:
+    all: 'internal.domain' # All hosts
+
 # Activate forward (activate by default)
 unbound_forward_zone_active : true
 # Forward server to google DNS (activate by default)
