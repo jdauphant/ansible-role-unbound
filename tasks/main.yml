@@ -22,6 +22,6 @@
      name=unbound
      state={{ unbound_service_state }}
      enabled={{ unbound_service_enabled }}
-     pattern="/unbound"
+     pattern="unbound"
   tags: ["service","unbound"]
 
