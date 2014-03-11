@@ -29,7 +29,7 @@ server:
     local-zone: "{{domain.domain_name}}." {{unbound_local_zone_type[domain.domain_name] | default(unbound_default_local_zone)}}
 {% for subdomain, entry in domain.iteritems() %}
 {% if subdomain != "domain_name" %}
-    local-data: "{{ subdomain }}.{{ domain.domain_name }}. {{ entry }}{% if entry | match(".*CNAME.*[^.]") %}.{{ domain.domain_name }}.{% endif %}"
+    local-data: "{{ subdomain }}.{{ domain.domain_name }}. {{ entry }}{% if entry | match("^.*CNAME.*[^.]$") %}.{{ domain.domain_name }}.{% endif %}"
 {% endif %}
 {% endfor %}
 {% endfor %}
