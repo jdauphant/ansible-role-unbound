@@ -25,14 +25,6 @@ server:
     private-address: {{private_address}}
 {% endfor %}
 
-{% for domain in unbound_domains %}
-    local-zone: "{{domain.domain_name}}." {{unbound_local_zone_type[domain.domain_name] | default(unbound_default_local_zone)}}
-{% for subdomain, entry in domain.iteritems() %}
-{% if subdomain != "domain_name" %}
-    local-data: "{{ subdomain }}.{{ domain.domain_name }}. {{ entry }}{% if entry | match("^.*CNAME.*[^.]$") %}.{{ domain.domain_name }}.{% endif %}"
-{% endif %}
-{% endfor %}
-{% endfor %}
 
 {% for domain in unbound_domains_with_reverses %}
     local-zone: "{{domain.domain_name}}." {{unbound_local_zone_type[domain.domain_name] | default(unbound_default_local_zone)}}
@@ -60,6 +52,15 @@ server:
     # Reverse for group {{group}}
 {% for host in groups[group] %}
     local-data-ptr: "{{ hostvars[host]['ansible_ssh_host'] }} {{ host }}.{{ domain }}."
+{% endfor %}
+{% endfor %}
+
+{% for domain in unbound_domains %}
+    local-zone: "{{domain.domain_name}}." {{unbound_local_zone_type[domain.domain_name] | default(unbound_default_local_zone)}}
+{% for subdomain, entry in domain.iteritems() %}
+{% if subdomain != "domain_name" %}
+    local-data: "{{ subdomain }}.{{ domain.domain_name }}. {{ entry }}"
+{% endif %}
 {% endfor %}
 {% endfor %}
 
