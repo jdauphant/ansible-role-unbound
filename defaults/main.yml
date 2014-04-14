@@ -6,6 +6,8 @@ unbound_configuration:
     - num-threads: 1
     - pidfile: "/var/run/unbound.pid"
 
+unbound_zone_name: "default"
+
 unbound_interfaces: 
     - 127.0.0.1
 
@@ -22,15 +24,19 @@ unbound_private_address:
 
 unbound_domains: {}
 
-unbound_domains_with_reverses: {}
+unbound_domains_with_reverses: []
 
 unbound_inventory_domain: {}
 
 unbound_local_zone_type: {}
+unbound_local_zone: []
 
 unbound_default_local_zone: "static"
 
-unbound_inventory_reverse_domain: "{{unbound_inventory_domain}}"
+unbound_inventory_domain_with_reverse: true
+
+unbound_zones: 
+    - name: "default"
 
 unbound_forward_zone_active : true
 unbound_forward_zone:

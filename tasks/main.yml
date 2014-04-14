@@ -9,6 +9,31 @@
   when: ansible_os_family == 'RedHat'
   tags: ["packages","unbound"]
 
+- name: Ensure zones folder exist
+  file: path=/etc/unbound/conf.d state=directory mode=755
+  notify: restart unbound
+  tags: ["configuration","unbound"]
+
+- name: configure default empty zone
+  copy: 
+     src=default.conf
+     dest="/etc/unbound/conf.d/default.conf"
+     force=no
+  tags: ["configuration","unbound"]
+
+- name: configure unbound zones
+  template: 
+     src=zone.conf.j2
+     dest="/etc/unbound/conf.d/{{item.name}}.conf"
+  with_items: unbound_zones
+  notify: restart unbound
+  tags: ["configuration","unbound"]
+
+- name: retreive unbound conf file list
+  shell: /bin/ls /etc/unbound/conf.d/
+  register: unbound_conf_list
+  always_run: true
+
 - name: configure unbound
   template: 
      src=unbound.conf.j2

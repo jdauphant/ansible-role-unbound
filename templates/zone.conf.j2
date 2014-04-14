@@ -1,0 +1,42 @@
+# {{ ansible_managed }}
+
+{% set local_zone_type = item.local_zone_type | default(unbound_local_zone) %}
+{% set domains_with_reverses = item.domains_with_reverses | default(unbound_domains_with_reverses) %}
+{% set local_zones = item.local_zones | default(unbound_local_zone) %}
+{% set inventory_domain = item.inventory_domain | default(unbound_inventory_domain) %}
+{% set domains = item.domains | default(unbound_domains) %}
+{% set inventory_domain_with_reverse = item.inventory_domain_with_reverse|default(unbound_inventory_domain_with_reverse) %}
+
+
+{% for domain in domains_with_reverses %}
+#    local-zone: "{{domain.domain_name}}." {{local_zone_type[domain.domain_name] | default(unbound_default_local_zone)}}
+{% for subdomain, ip in domain.iteritems() %}
+{% if subdomain != "domain_name" %}
+    local-data: "{{ subdomain }}.{{ domain.domain_name }}. IN A {{ ip }}"
+    local-data-ptr: "{{ ip }} {{ subdomain }}.{{ domain.domain_name }}"
+{% endif %}
+{% endfor %}
+{% endfor %}
+
+{% for domain in local_zones %}
+    local-zone: "{{domain}}." {{local_zone_type[domain] | default(unbound_default_local_zone)}}
+{% endfor %}
+
+{% for group, domain in inventory_domain.iteritems() %}
+    # Group {{group}}
+{% for host in groups[group] %}
+    local-data: "{{ hostvars[host]['inventory_hostname_short'] }}.{{ domain }}. IN A {{ hostvars[host][ 'ansible_ssh_host'] }}"
+{% if inventory_domain_with_reverse %}
+	local-data-ptr: "{{ hostvars[host]['ansible_ssh_host'] }} {{ hostvars[host]['inventory_hostname_short'] }}.{{ domain }}."
+{% endif %}
+{% endfor %}
+{% endfor %}
+
+{% for domain in domains %}
+#    local-zone: "{{domain.domain_name}}." {{local_zone_type[domain.domain_name] | default(unbound_default_local_zone)}}
+{% for subdomain, entry in domain.iteritems() %}
+{% if subdomain != "domain_name" %}
+    local-data: "{{ subdomain }}.{{ domain.domain_name }}. {{ entry }}"
+{% endif %}
+{% endfor %}
+{% endfor %}
