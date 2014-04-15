@@ -1,0 +1,19 @@
+# {{ ansible_managed }}
+
+{% for config in unbound_configuration %}
+    {{ config.keys().0 }}: {{ config.values().0 }}
+{% endfor %}
+    auto-trust-anchor-file: "/var/lib/unbound/root.key"
+{% for interface in unbound_interfaces %}
+    interface: {{interface}}
+{% endfor %}
+{% for access_control in unbound_access_control %}
+    access-control: {{access_control}}
+{% endfor %}
+
+    hide-identity: yes
+    hide-version: yes
+
+{% for private_address in unbound_private_address %}
+    private-address: {{private_address}}
+{% endfor %}

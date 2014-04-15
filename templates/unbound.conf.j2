@@ -7,32 +7,8 @@
 server:
     # The following line will configure unbound to perform cryptographic
     # DNSSEC validation using the root trust anchor.
-{% for config in unbound_configuration %}
-    {{ config.keys().0 }}: {{ config.values().0 }}
-{% endfor %}
-    auto-trust-anchor-file: "/var/lib/unbound/root.key"
-{% for interface in unbound_interfaces %}
-    interface: {{interface}}
-{% endfor %}
-{% for access_control in unbound_access_control %}
-    access-control: {{access_control}}
-{% endfor %}
-
-    hide-identity: yes
-    hide-version: yes
-
-{% for private_address in unbound_private_address %}
-    private-address: {{private_address}}
-{% endfor %}
 
 {% for include in unbound_conf_list.stdout_lines %}
     include: "/etc/unbound/conf.d/{{include}}"
 {% endfor %}
 
-{% if unbound_forward_zone_active %}
-    forward-zone:
-        name: "."
-{% for forward_addr in unbound_forward_zone %}
-        forward-addr: {{forward_addr}}
-{% endfor %}      
-{% endif %}
