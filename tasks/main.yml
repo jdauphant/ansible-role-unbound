@@ -37,6 +37,7 @@
   shell: /bin/ls /etc/unbound/conf.d/
   register: unbound_conf_list
   always_run: true
+  tags: ["configuration","unbound"]
 
 - name: configure unbound.conf to include all configuration
   template: 
