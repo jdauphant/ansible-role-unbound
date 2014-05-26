@@ -14,6 +14,11 @@
   notify: restart unbound
   tags: ["configuration","unbound"]
 
+- name: Ensure log file exist
+  file: path={{unbound_logfile}} state=touch mode=755 owner=unbound
+  notify: restart unbound
+  tags: ["configuration","unbound"]
+
 - name: configure add independant config file
   template: 
      src={{item}}.j2

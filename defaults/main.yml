@@ -1,10 +1,12 @@
 ---
+unbound_logfile: "/var/log/unbound.log"
 unbound_configuration:
     - verbosity: 1
     - do-ip4: "yes"
     - do-ip6: "no"
     - num-threads: 1
     - pidfile: "/var/run/unbound.pid"
+    - logfile: "{{unbound_logfile}}"
 
 unbound_zone_name: "default"
 unbound_only_zones: false
