@@ -3,7 +3,9 @@
 {% for config in unbound_configuration %}
     {{ config.keys().0 }}: {{ config.values().0 }}
 {% endfor %}
-    auto-trust-anchor-file: "/var/lib/unbound/root.key"
+{% if unbound_anchor_enabled %}
+    auto-trust-anchor-file: "{{unbound_anchorfile}}"
+{% endif %}
 {% for interface in unbound_interfaces %}
     interface: {{interface}}
 {% endfor %}

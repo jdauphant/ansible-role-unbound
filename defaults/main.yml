@@ -1,4 +1,6 @@
 ---
+unbound_anchorfile: "/var/lib/unbound/root.key"
+unbound_anchor_enabled: True
 unbound_logfile: "/var/log/unbound.log"
 unbound_configuration:
     - verbosity: 1
