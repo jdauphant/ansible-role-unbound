@@ -9,7 +9,7 @@
 
 
 {% for domain in domains_with_reverses %}
-#    local-zone: "{{domain.domain_name}}." {{local_zone_type[domain.domain_name] | default(unbound_default_local_zone)}}
+    local-zone: "{{domain.domain_name}}." {{local_zone_type[domain.domain_name] | default(unbound_default_local_zone)}}
 {% for subdomain, ip in domain.iteritems() %}
 {% if subdomain != "domain_name" %}
     local-data: "{{ subdomain }}.{{ domain.domain_name }}. IN A {{ ip }}"
