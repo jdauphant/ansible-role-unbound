@@ -34,7 +34,7 @@
   template: 
      src=10zone.conf.j2
      dest="/etc/unbound/conf.d/10{{item.name}}.conf"
-  with_items: unbound_zones
+  with_items: "{{unbound_zones}}"
   notify: restart unbound
   tags: ["configuration","unbound"]
 
