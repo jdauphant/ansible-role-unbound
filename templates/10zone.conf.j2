@@ -33,7 +33,7 @@
 {% endfor %}
 
 {% for domain in domains %}
-#    local-zone: "{{domain.domain_name}}." {{local_zone_type[domain.domain_name] | default(unbound_default_local_zone)}}
+    local-zone: "{{domain.domain_name}}." {{local_zone_type[domain.domain_name] | default(unbound_default_local_zone)}}
 {% for subdomain, entry in domain.iteritems() %}
 {% if subdomain != "domain_name" %}
     local-data: "{{ subdomain }}.{{ domain.domain_name }}. {{ entry }}"
