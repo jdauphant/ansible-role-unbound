@@ -9,6 +9,7 @@ unbound_configuration:
     - num-threads: 1
     - pidfile: "/var/run/unbound.pid"
     - logfile: "{{unbound_logfile}}"
+    - use-syslog: "no"
 
 unbound_zone_name: "default"
 unbound_only_zones: false
