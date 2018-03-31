@@ -43,7 +43,7 @@ unbound_inventory_domain_with_reverse: true
 unbound_zones: 
     - name: "default"
 
-unbound_forward_zone_active : true
+unbound_forward_zone_active: true
 unbound_forward_zone:
    - 8.8.8.8 #Google DNS 1
    - 8.8.4.4 #Google DNS 2
