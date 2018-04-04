@@ -9,13 +9,20 @@
   when: ansible_os_family == 'RedHat' and unbound_only_zones == false
   tags: ["packages","unbound"]
 
-- name: Ensure zones folder exist
+- name: Ensure /etc/unbound/conf.d folder exist
   file: path=/etc/unbound/conf.d state=directory mode=755
   notify: restart unbound
   tags: ["configuration","unbound"]
 
 - name: Ensure log file exist
-  file: path={{unbound_logfile}} state=touch mode=755 owner=unbound
+  command: touch "{{unbound_logfile}}"
+  tags: ["configuration","unbound"]
+  args:
+    creates:  "{{unbound_logfile}}"
+    warn:     false
+    
+- name: Ensure log file exist
+  file: path={{unbound_logfile}} state=file mode=644 owner=unbound
   notify: restart unbound
   tags: ["configuration","unbound"]
 
@@ -41,14 +48,14 @@
 - name: retreive unbound conf file list
   shell: /bin/ls /etc/unbound/conf.d/
   register: unbound_conf_list
-  always_run: true
+  check_mode: no
   tags: ["configuration","unbound"]
 
 - name: configure unbound.conf to include all configuration
   template: 
      src=unbound.conf.j2
      dest=/etc/unbound/unbound.conf
-     validate="/usr/sbin/unbound-checkconf %s"
+     #validate="/usr/sbin/unbound-checkconf %s"
   notify: restart unbound
   tags: ["configuration","unbound"]
 
@@ -57,6 +64,5 @@
      name=unbound
      state={{ unbound_service_state }}
      enabled={{ unbound_service_enabled }}
-     pattern="unbound"
   tags: ["service","unbound"]
 
