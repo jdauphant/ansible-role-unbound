@@ -29,7 +29,7 @@ unbound_forward_zone:
 ## Generate entries and reverse from the inventory (need ansible_ssh_host set on all host)
 ```
 # Listen interface
-unbound_interfaces: 
+unbound_interfaces:
     - 127.0.0.1
     - 192.168.0.10
 
@@ -58,7 +58,7 @@ unbound_forward_zone:
 ## More complete example (need ansible_ssh_host set on all host)
 ```
 # Listen interface
-unbound_interfaces: 
+unbound_interfaces:
     - 127.0.0.1
     - 192.168.0.10
 
