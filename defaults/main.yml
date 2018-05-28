@@ -14,7 +14,7 @@ unbound_configuration:
 unbound_zone_name: "default"
 unbound_only_zones: false
 
-unbound_interfaces: 
+unbound_interfaces:
     - 127.0.0.1
 
 unbound_access_control:
@@ -24,7 +24,7 @@ unbound_private_address:
     - 10.0.0.0/8
     - 172.16.0.0/12
     - 192.168.0.0/16
-    - 169.254.0.0/16 
+    - 169.254.0.0/16
     - "fd00::/8"
     - "fe80::/10"
 
@@ -41,7 +41,7 @@ unbound_default_local_zone: "static"
 
 unbound_inventory_domain_with_reverse: true
 
-unbound_zones: 
+unbound_zones:
     - name: "default"
 
 unbound_forward_zone_active: true
@@ -50,7 +50,7 @@ unbound_forward_zone:
    - 8.8.4.4 #Google DNS 2
 
 # Package states: installed or latest
-unbound_pkg_state: installed
+unbound_pkg_state: present
 
 # Service states: started or stopped
 unbound_service_state: started

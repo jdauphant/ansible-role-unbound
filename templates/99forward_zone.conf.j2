@@ -1,9 +1,9 @@
 # {{ ansible_managed }}
 
 {% if unbound_forward_zone_active %}
-{% for forward_zone in unbound_forward_zone %}
     forward-zone:
-        name: "{{forward_zone.keys().0}}"
-        forward-addr: {{forward_zone.values().0}}
-{% endfor %}      
+        name: "."
+{% for forward_addr in unbound_forward_zone %}
+        forward-addr: {{forward_addr}}
+{% endfor %}
 {% endif %}
