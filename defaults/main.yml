@@ -10,6 +10,7 @@ unbound_configuration:
     - pidfile: "/var/run/unbound.pid"
     - logfile: "{{unbound_logfile}}"
     - use-syslog: "no"
+    - do-not-query-localhost: "yes" # yes is default, no for using a forwarder running on localhost (e.g. dnscrypt-proxy)
 
 unbound_zone_name: "default"
 unbound_only_zones: false
