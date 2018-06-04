@@ -4,23 +4,23 @@ unbound_anchor_enabled: True
 unbound_logfile: "/var/log/unbound.log"
 unbound_configuration:
   - name: verbosity
-    value: 1
+    value: "1"
   - name: do-ip4
-    value: yes
+    value: "yes"
   - name: do-ip6
-    value: no
+    value: "no"
   - name: num-threads
-    value: 1
+    value: "1"
   - name: pidfile
     value: /var/run/unbound.pid
   - name: logfile
     value: "{{unbound_logfile}}"
-  - name: use-syslogi
-    value: no
+  - name: use-syslog
+    value: "no"
   - name: log-queries
-    value: no
+    value: "no"
   - name: do-not-query-localhost
-    value: yes # yes is default, no for using a forwarder running on localhost (e.g. dnscrypt-proxy)
+    value: "yes" # yes is default, no for using a forwarder running on localhost (e.g. dnscrypt-proxy)
 
 unbound_zone_name: "default"
 unbound_only_zones: false
