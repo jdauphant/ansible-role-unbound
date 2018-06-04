@@ -3,14 +3,24 @@ unbound_anchorfile: "/var/lib/unbound/root.key"
 unbound_anchor_enabled: True
 unbound_logfile: "/var/log/unbound.log"
 unbound_configuration:
-    - verbosity: 1
-    - do-ip4: "yes"
-    - do-ip6: "no"
-    - num-threads: 1
-    - pidfile: "/var/run/unbound.pid"
-    - logfile: "{{unbound_logfile}}"
-    - use-syslog: "no"
-    - do-not-query-localhost: "yes" # yes is default, no for using a forwarder running on localhost (e.g. dnscrypt-proxy)
+  - name: verbosity
+    value: 1
+  - name: do-ip4
+    value: yes
+  - name: do-ip6
+    value: no
+  - name: num-threads
+    value: 1
+  - name: pidfile
+    value: /var/run/unbound.pid
+  - name: logfile
+    value: "{{unbound_logfile}}"
+  - name: use-syslogi
+    value: no
+  - name: log-queries
+    value: no
+  - name: do-not-query-localhost
+    value: yes # yes is default, no for using a forwarder running on localhost (e.g. dnscrypt-proxy)
 
 unbound_zone_name: "default"
 unbound_only_zones: false
@@ -47,8 +57,10 @@ unbound_zones:
 
 unbound_forward_zone_active: true
 unbound_forward_zone:
-   - 8.8.8.8 #Google DNS 1
-   - 8.8.4.4 #Google DNS 2
+  - name: .
+    server:
+      - 172.98.193.42 # OpenNIC
+      - 185.121.177.177 # OpenNIC
 
 # Package states: installed or latest
 unbound_pkg_state: installed
