@@ -22,7 +22,7 @@
     local-zone: "{{domain}}." {{local_zone_type[domain] | default(unbound_default_local_zone)}}
 {% endfor %}
 
-{% for group, domain in inventory_domain.iteritems() %}
+{% for group, domain in inventory_domain %}
     # Group {{group}}
 {% for host in groups[group] %}
     local-data: "{{ hostvars[host]['inventory_hostname_short'] }}.{{ domain }}. IN A {{ hostvars[host][ 'ansible_ssh_host'] }}"
