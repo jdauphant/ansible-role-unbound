@@ -9,7 +9,7 @@ Ansible role for Unbound DNS Server and resolver
 - Generation of DNS entries from ansible inventory (A entries and reverse)
 - Forward to another dns
 - IPv4/IPv6 for reverse
- (A, AAAA, CNAME, TXT, PTR
+
 # Information :
 - Test on Ubuntu
 - Untested on debian and fedora
