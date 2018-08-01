@@ -9,6 +9,6 @@ install:
 script:
   - echo localhost > inventory
   - ansible-playbook -i inventory --syntax-check --list-tasks role.yml
-  - ansible-playbook -i inventory --connection=local --sudo -vvvv role.yml
+  - ansible-playbook -i inventory --connection=local --become-method sudo -vvvv role.yml
 notifications:
     webhooks: https://galaxy.ansible.com/api/v1/notifications/

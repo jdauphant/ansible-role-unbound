@@ -35,8 +35,34 @@
 {% for domain in domains %}
     local-zone: "{{domain.domain_name}}." {{local_zone_type[domain.domain_name] | default(unbound_default_local_zone)}}
 {% for subdomain, entry in domain.iteritems() %}
-{% if subdomain != "domain_name" %}
-    local-data: "{{ subdomain }}.{{ domain.domain_name }}. {{ entry }}"
+{% if subdomain == "domain_rr" %}
+{% for rr in entry %}
+    local-data:     "{{ domain.domain_name }}. {{ rr }}"
+{% endfor %}
+{% elif subdomain != "domain_name" %}
+{% if entry is string %}
+    local-data:     "{{ subdomain }}.{{ domain.domain_name }}. {{ entry }}"
+{% else %}
+{% set entry_ttl = entry.ttl | default('') %}
+{% if entry.ip is string %}
+    local-data:     "{{ subdomain }}.{{ domain.domain_name }}. IN A {{ entry_ttl }} {{ entry.ip }}"
+{% endif %}
+{% if entry.ipv6 is string %}
+    local-data:     "{{ subdomain }}.{{ domain.domain_name }}. IN AAAA {{ entry_ttl }} {{ entry.ipv6 }}"
+{% endif %}
+{% if entry.txt is string %}
+    local-data:     '{{ subdomain }}.{{ domain.domain_name }}. IN TXT {{ entry_ttl }} "{{ entry.txt }}"'
+{% endif %}
+{% for cname in (entry.cnames | default([])) %}
+    local-data:     "{{ cname }}.{{ domain.domain_name }}. IN CNAME {{ entry_ttl }} {{ subdomain }}.{{ domain.domain_name }}."
+{% endfor %}
+{% if entry.reverse | default(false) and entry.ip is string %}
+    local-data-ptr: "{{ entry.ip }} {{ entry_ttl }} {{ subdomain }}.{{ domain.domain_name }}."
+{% endif %}
+{% if entry.reverse | default(false) and entry.ipv6 is string %}
+    local-data-ptr: "{{ entry.ipv6 }} {{ entry_ttl }} {{ subdomain }}.{{ domain.domain_name }}."
+{% endif %}
+{% endif %}
 {% endif %}
 {% endfor %}
 {% endfor %}
