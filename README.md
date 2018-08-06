@@ -101,9 +101,9 @@ unbound_local_zone_type:
 
 For creating local domain data with the `unbound_domain` variable two variants can be used.
 The simple one uses plain strings to create one resource record per host name.
-With this variant no other resource records for the same name cna be created.
+With this variant no other resource records for the same name can be created.
 
-The more complex version allows objects to set the following resource records: `A`, 
+The more complex version allows dict objects to set the following resource records: `A`, 
 `AAAA`, `CNAME`, `TXT`. Reverse records are automatically created for `A` and `AAAA` if needed.
 
 Resource records for the domain itself may be set as a list with the `domain_rr` key. 
@@ -115,7 +115,7 @@ unbound_domain:
   domain_name: example.net
   domain_rr:
     - "MX 10 server1.example.net."
-    - "IN A 1.2.3.5 
+    - "IN A 1.2.3.5"
   www: "1.2.3.4"
   server1: "IN A 1.2.3.5"
   admin-contact: 'IN TXT "ask your neighbour"'  
@@ -169,7 +169,7 @@ Generated unbound configuration:
     local-data: 'admin-contact.example.net. IN TXT "ask your neighbour"'
 ```` 
 
-##### Example for mixed domain with booth versions:
+##### Example for mixed domain with both versions:
 ````yml
 unbound_domain:
   domain_name: example.net
