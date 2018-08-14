@@ -21,6 +21,8 @@ unbound_configuration:
     value: "no"
   - name: do-not-query-localhost
     value: "yes" # yes is default, no for using a forwarder running on localhost (e.g. dnscrypt-proxy)
+  - name: do-daemonize
+    value: "no" # for systemd systems, default is yes
 
 unbound_zone_name: "default"
 unbound_only_zones: false
