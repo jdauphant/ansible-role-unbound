@@ -1,6 +1,6 @@
 # {{ ansible_managed }}
 
-{% set local_zone_type = item.local_zone_type | default(unbound_local_zone) %}
+{% set local_zone_type = item.local_zone_type | default(unbound_local_zone_type) %}
 {% set domains_with_reverses = item.domains_with_reverses | default(unbound_domains_with_reverses) %}
 {% set local_zones = item.local_zones | default(unbound_local_zone) %}
 {% set inventory_domain = item.inventory_domain | default(unbound_inventory_domain) %}
