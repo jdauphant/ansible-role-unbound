@@ -5,10 +5,10 @@ Ansible role for Unbound DNS Server and resolver
 
 
 # Supports
-- Add DNS entries
+- Add DNS entries (multiple record types per entry)
 - Generation of DNS entries from ansible inventory (A entries and reverse)
 - Forward to another dns
-- IPv4 only for reverse
+- IPv4/IPv6 for reverse
 
 # Information :
 - Test on Ubuntu
@@ -96,3 +96,103 @@ unbound_local_zone_type:
     reversed.example.com: "static"
 
 ```
+
+### Create local domain data
+
+For creating local domain data with the `unbound_domain` variable two variants can be used.
+The simple one uses plain strings to create one resource record per host name.
+With this variant no other resource records for the same name can be created.
+
+The more complex version allows dict objects to set the following resource records: `A`, 
+`AAAA`, `CNAME`, `TXT`. Reverse records are automatically created for `A` and `AAAA` if needed.
+
+Resource records for the domain itself may be set as a list with the `domain_rr` key. 
+Attention - the domain name is not automatically added, the string is taken as is!  
+
+##### Example for simple domain:
+````yml
+unbound_domain:
+  domain_name: example.net
+  domain_rr:
+    - "MX 10 server1.example.net."
+    - "IN A 1.2.3.5"
+  www: "1.2.3.4"
+  server1: "IN A 1.2.3.5"
+  admin-contact: 'IN TXT "ask your neighbour"'  
+```` 
+
+Generated unbound configuration:
+````yml
+    local-zone: "example.net." static
+    local-data: "example.net. MX 10 server1.example.net."
+    local-data: "example.net. IN A 1.2.3.5"
+    local-data: "www.example.net. 1.2.3.4"
+    local-data: "server1.example.net. IN A 1.2.3.5"
+    local-data: 'admin-contact.example.net. IN TXT "ask your neighbour"'
+```` 
+
+##### Example for complex domain:
+
+All fields (ip, ipv6, cnames, txt, reverse) are optional, only the attributes needed
+should be set
+
+````yml
+unbound_domain:
+  domain_name: example.net
+  www:
+    ip: "1.2.3.4"
+    reverse: true
+  server1:
+    ip: "1.2.3.5"
+    ipv6: "fe80::7"
+    cnames:
+      - mail
+      - imap
+      - smtp
+    reverse: true
+  admin-contact:
+    txt: "ask your neighbour"  
+```` 
+
+Generated unbound configuration:
+````yml
+    local-zone: "example.net." static
+    local-data: "www.example.net. 1.2.3.4"
+    local-data-ptr: "1.2.3.4 www.example.net."
+    local-data: "server1.example.net. IN A  1.2.3.5"
+    local-data: "server1.example.net. IN AAAA fe80::7"
+    local-data: "mail.example.net. IN CNAME server1.example.net."
+    local-data: "imap.example.net. IN CNAME server1.example.net."
+    local-data: "smtp.example.net. IN CNAME server1.example.net."
+    local-data-ptr: "1.2.3.5 server1.example.net."
+    local-data-ptr: "fe80::7 server1.example.net."
+    local-data: 'admin-contact.example.net. IN TXT "ask your neighbour"'
+```` 
+
+##### Example for mixed domain with both versions:
+````yml
+unbound_domain:
+  domain_name: example.net
+  www: "1.2.3.4"
+  server1:
+    ip: "1.2.3.5"
+    ipv6: "fe80::7"
+    cnames:
+      - mail
+      - imap
+      - smtp
+    reverse: true
+```` 
+
+Generated unbond configuration:
+````yml
+    local-zone: "example.net." static
+    local-data: "www.example.net. 1.2.3.4"
+    local-data: "server1.example.net. IN A  1.2.3.5"
+    local-data: "server1.example.net. IN AAAA fe80::7"
+    local-data: "mail.example.net. IN CNAME server1.example.net."
+    local-data: "imap.example.net. IN CNAME server1.example.net."
+    local-data: "smtp.example.net. IN CNAME server1.example.net."
+    local-data-ptr: "1.2.3.5 server1.example.net."
+    local-data-ptr: "fe80::7 server1.example.net."
+```` 
