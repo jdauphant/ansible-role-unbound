@@ -10,7 +10,7 @@
 
 {% for domain in domains_with_reverses %}
     local-zone: "{{domain.domain_name}}." {{local_zone_type[domain.domain_name] | default(unbound_default_local_zone)}}
-{% for subdomain, ip in domain.iteritems() %}
+{% for subdomain, ip in domain.items() %}
 {% if subdomain != "domain_name" %}
     local-data: "{{ subdomain }}.{{ domain.domain_name }}. IN A {{ ip }}"
     local-data-ptr: "{{ ip }} {{ subdomain }}.{{ domain.domain_name }}"
@@ -22,7 +22,7 @@
     local-zone: "{{domain}}." {{local_zone_type[domain] | default(unbound_default_local_zone)}}
 {% endfor %}
 
-{% for group, domain in inventory_domain.iteritems() %}
+{% for group, domain in inventory_domain.items() %}
     # Group {{group}}
 {% for host in groups[group] %}
     local-data: "{{ hostvars[host]['inventory_hostname_short'] }}.{{ domain }}. IN A {{ hostvars[host][ 'ansible_ssh_host'] }}"
@@ -34,7 +34,7 @@
 
 {% for domain in domains %}
     local-zone: "{{domain.domain_name}}." {{local_zone_type[domain.domain_name] | default(unbound_default_local_zone)}}
-{% for subdomain, entry in domain.iteritems() %}
+{% for subdomain, entry in domain.items() %}
 {% if subdomain == "domain_rr" %}
 {% for rr in entry %}
     local-data:     "{{ domain.domain_name }}. {{ rr }}"

@@ -1,7 +1,9 @@
 # {{ ansible_managed }}
 
 {% for config in unbound_configuration %}
-    {{ config.keys().0 }}: {{ config.values().0 }}
+{% for key, value in config.items() %}
+    {{ key }}: {{ value }}
+{% endfor %}
 {% endfor %}
 {% if unbound_anchor_enabled %}
     auto-trust-anchor-file: "{{unbound_anchorfile}}"
