@@ -3,6 +3,7 @@
 {% if unbound_forward_zone_active %}
     forward-zone:
         name: "."
+        forward-ssl-upstream: {{unbound_forward_tls}}
 {% for forward_addr in unbound_forward_zone %}
         forward-addr: {{forward_addr}}
 {% endfor %}

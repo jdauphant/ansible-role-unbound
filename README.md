@@ -11,19 +11,22 @@ Ansible role for Unbound DNS Server and resolver
 - IPv4/IPv6 for reverse
 
 # Information :
-- Test on Ubuntu
-- Untested on debian and fedora
+- Tested on Ubuntu
+- Tested on Debian Stretch
+- Untested on Fedora
 
 # Example :
 
 ## Simple forward on localhost :
 ```
-# Activate forward (activate by default)
+# Activate forward (active by default)
 unbound_forward_zone_active : true
-# Forward server to google DNS (activate by default)
+# Activate DNS over TLS (active by default)
+unbound_forward_tls: "yes"
+# Forward server to Cloudflare DNS (active by default)
 unbound_forward_zone:
-   - 8.8.8.8 #Google DNS 1
-   - 8.8.4.4 #Google DNS 2
+   - "1.1.1.1@853#cloudflare-dns.com"
+   - "1.0.0.1@853#cloudflare-dns.com"
 ```
 
 ## Generate entries and reverse from the inventory (need ansible_ssh_host set on all host)
@@ -38,7 +41,7 @@ unbound_access_control:
     - 127.0.0.1 allow
     - 192.168.0.0/24 allow
 
-# Create entries from inventory (reverse  also created by default)
+# Create entries from inventory (reverse also created by default)
 unbound_inventory_domain:
     all: 'internal.domain' # All hosts
 
@@ -46,12 +49,14 @@ unbound_inventory_domain:
 unbound_inventory_reverse_domain:
     all: 'internal.domain' # All hosts
 
-# Activate forward (activate by default)
-unbound_forward_zone_active : true
-# Forward server to google DNS (activate by default)
+# Activate forward (active by default)
+unbound_forward_zone_active: true
+# Activate DNS over TLS (active by default)
+unbound_forward_tls: "yes"
+# Forward server to Cloudflare DNS (active by default)
 unbound_forward_zone:
-   - 8.8.8.8 #Google DNS 1
-   - 8.8.4.4 #Google DNS 2
+   - "1.1.1.1@853#cloudflare-dns.com"
+   - "1.0.0.1@853#cloudflare-dns.com"
 
 ```
 
@@ -103,11 +108,11 @@ For creating local domain data with the `unbound_domain` variable two variants c
 The simple one uses plain strings to create one resource record per host name.
 With this variant no other resource records for the same name can be created.
 
-The more complex version allows dict objects to set the following resource records: `A`, 
+The more complex version allows dict objects to set the following resource records: `A`,
 `AAAA`, `CNAME`, `TXT`. Reverse records are automatically created for `A` and `AAAA` if needed.
 
-Resource records for the domain itself may be set as a list with the `domain_rr` key. 
-Attention - the domain name is not automatically added, the string is taken as is!  
+Resource records for the domain itself may be set as a list with the `domain_rr` key.
+Attention - the domain name is not automatically added, the string is taken as is!
 
 ##### Example for simple domain:
 ````yml
@@ -118,8 +123,8 @@ unbound_domain:
     - "IN A 1.2.3.5"
   www: "1.2.3.4"
   server1: "IN A 1.2.3.5"
-  admin-contact: 'IN TXT "ask your neighbour"'  
-```` 
+  admin-contact: 'IN TXT "ask your neighbour"'
+````
 
 Generated unbound configuration:
 ````yml
@@ -129,7 +134,7 @@ Generated unbound configuration:
     local-data: "www.example.net. 1.2.3.4"
     local-data: "server1.example.net. IN A 1.2.3.5"
     local-data: 'admin-contact.example.net. IN TXT "ask your neighbour"'
-```` 
+````
 
 ##### Example for complex domain:
 
@@ -151,8 +156,8 @@ unbound_domain:
       - smtp
     reverse: true
   admin-contact:
-    txt: "ask your neighbour"  
-```` 
+    txt: "ask your neighbour"
+````
 
 Generated unbound configuration:
 ````yml
@@ -167,7 +172,7 @@ Generated unbound configuration:
     local-data-ptr: "1.2.3.5 server1.example.net."
     local-data-ptr: "fe80::7 server1.example.net."
     local-data: 'admin-contact.example.net. IN TXT "ask your neighbour"'
-```` 
+````
 
 ##### Example for mixed domain with both versions:
 ````yml
@@ -182,7 +187,7 @@ unbound_domain:
       - imap
       - smtp
     reverse: true
-```` 
+````
 
 Generated unbond configuration:
 ````yml
@@ -195,4 +200,4 @@ Generated unbond configuration:
     local-data: "smtp.example.net. IN CNAME server1.example.net."
     local-data-ptr: "1.2.3.5 server1.example.net."
     local-data-ptr: "fe80::7 server1.example.net."
-```` 
+````
