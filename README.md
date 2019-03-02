@@ -12,7 +12,7 @@ Ansible role for Unbound DNS Server and resolver
 
 # Information :
 - Tested on Ubuntu
-- Tested on Debian Stretch
+- Tested on Debian Stretch (Use `forward-ssl-upstream` instead of `forward-tls-upstream`)
 - Untested on Fedora
 
 # Example :
@@ -22,8 +22,9 @@ Ansible role for Unbound DNS Server and resolver
 # Activate forward (active by default)
 unbound_forward_zone_active : true
 # Activate DNS over TLS (active by default)
-unbound_forward_tls: "yes"
-# Forward server to Cloudflare DNS (active by default)
+unbound_forward_zone_configuration:
+    - forward-ssl-upstream: "yes"
+# Forward server to Cloudflare DNS
 unbound_forward_zone:
    - "1.1.1.1@853#cloudflare-dns.com"
    - "1.0.0.1@853#cloudflare-dns.com"
@@ -52,8 +53,9 @@ unbound_inventory_reverse_domain:
 # Activate forward (active by default)
 unbound_forward_zone_active: true
 # Activate DNS over TLS (active by default)
-unbound_forward_tls: "yes"
-# Forward server to Cloudflare DNS (active by default)
+unbound_forward_zone_configuration:
+    - forward-tls-upstream: "yes"
+# Forward server to Cloudflare DNS
 unbound_forward_zone:
    - "1.1.1.1@853#cloudflare-dns.com"
    - "1.0.0.1@853#cloudflare-dns.com"
