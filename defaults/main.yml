@@ -44,8 +44,8 @@ unbound_zones:
     - name: "default"
 
 unbound_forward_zone_active: true
-unbound_forward_zone_configuration:
-    - forward-tls-upstream: "yes"
+unbound_forward_zone_configuration: {}
+#    - forward-tls-upstream: "yes" #`forward-ssl-upstream` for older version
 unbound_forward_zone:
     # cleanbrowsing resolvers
     - "185.228.168.9@853#security-filter-dns.cleanbrowsing.org"
