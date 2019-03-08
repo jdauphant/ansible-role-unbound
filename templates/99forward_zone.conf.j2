@@ -3,6 +3,11 @@
 {% if unbound_forward_zone_active %}
     forward-zone:
         name: "."
+{% for config in unbound_forward_zone_configuration %}
+{% for key, value in config.items() %}
+        {{ key }}: {{ value }}
+{% endfor %}
+{% endfor %}
 {% for forward_addr in unbound_forward_zone %}
         forward-addr: {{forward_addr}}
 {% endfor %}

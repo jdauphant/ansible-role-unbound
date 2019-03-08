@@ -43,10 +43,24 @@ unbound_inventory_domain_with_reverse: true
 unbound_zones:
     - name: "default"
 
-unbound_forward_zone_active : true
+unbound_forward_zone_active: true
+unbound_forward_zone_configuration: {}
+#    - forward-tls-upstream: "yes" #`forward-ssl-upstream` for older version
 unbound_forward_zone:
-   - 8.8.8.8 #Google DNS 1
-   - 8.8.4.4 #Google DNS 2
+    # cloudflare resolvers
+    - "1.1.1.1@853#cloudflare-dns.com"
+    - "1.0.0.1@853#cloudflare-dns.com"
+
+    # google resolvers
+    - "8.8.8.8@853#dns.google"
+    - "8.8.4.4@853#dns.google"
+
+    # quad9 resolvers
+    - "9.9.9.9@853#dns.quad9.net"
+    - "149.112.112.112@853#dns.quad9.net"
+
+    # quadrant resolver
+    - "12.159.2.159@853#dns-tls.qis.io"
 
 # Package states: installed or latest
 unbound_pkg_state: present
