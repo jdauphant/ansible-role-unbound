@@ -41,6 +41,7 @@
      dest="/etc/unbound/conf.d/{{item}}"
   with_items:
      - 01general.conf
+     - 98stub_zone.conf
      - 99forward_zone.conf
   notify: restart unbound
   when: unbound_only_zones == false
@@ -75,4 +76,3 @@
      enabled={{ unbound_service_enabled }}
      pattern="unbound"
   tags: ["service","unbound"]
-
