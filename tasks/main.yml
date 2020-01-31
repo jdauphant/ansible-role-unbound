@@ -25,6 +25,16 @@
   notify: restart unbound
   tags: ["configuration","unbound"]
 
+- name: Configure AppArmor for the log file
+  template:
+     src=usr.sbin.unbound.j2
+     dest="/etc/apparmor.d/local/usr.sbin.unbound"
+  notify:
+    - restart unbound
+    - reload apparmor
+  when: unbound_only_zones == false
+  tags: ["configuration","unbound"]
+
 - name: configure add independant config file
   template:
      src={{item}}.j2
