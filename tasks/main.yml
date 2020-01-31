@@ -15,7 +15,13 @@
   tags: ["configuration","unbound"]
 
 - name: Ensure log file exist
-  file: path={{unbound_logfile}} state=touch mode=755 owner=unbound
+  file:
+    path: "{{ unbound_logfile }}"
+    state: touch
+    mode: 0644
+    owner: unbound
+    modification_time: preserve
+    access_time: preserve
   notify: restart unbound
   tags: ["configuration","unbound"]
 
