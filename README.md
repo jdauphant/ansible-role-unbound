@@ -3,6 +3,8 @@ ansible-role-unbound
 
 Ansible role for Unbound DNS Server and resolver
 
+## @jdauphant : I don't have time to manage anymore this role. Don't hesitate to fork and made your own version.
+
 
 # Supports
 - Add DNS entries (multiple record types per entry)
