@@ -62,6 +62,9 @@ unbound_forward_zone:
     # quadrant resolver
     - "12.159.2.159@853#dns-tls.qis.io"
 
+unbound_stub_zone_active: false
+unbound_stub_zone: {}
+
 # Package states: installed or latest
 unbound_pkg_state: present
 
@@ -70,4 +73,3 @@ unbound_service_state: started
 
 # Service enabled on startup: yes or no
 unbound_service_enabled: yes
-
