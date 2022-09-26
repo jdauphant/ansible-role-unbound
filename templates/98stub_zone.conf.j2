@@ -1,0 +1,11 @@
+# {{ ansible_managed }}
+
+{% if unbound_stub_zone_active %}
+{% for stub_zone in unbound_stub_zone %}
+    stub-zone:
+      name: "{{ stub_zone.name }}"
+      {% for stub_addr in stub_zone.addr -%}
+      stub-addr: {{ stub_addr }}
+      {% endfor %}
+{% endfor %}
+{% endif %}
