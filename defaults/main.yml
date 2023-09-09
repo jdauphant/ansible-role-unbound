@@ -5,7 +5,7 @@ unbound_logfile: "/var/log/unbound.log"
 unbound_configuration:
     - verbosity: 1
     - do-ip4: "yes"
-    - do-ip6: "no"
+    - do-ip6: "yes"
     - num-threads: 1
     - pidfile: "/var/run/unbound.pid"
     - logfile: "{{unbound_logfile}}"

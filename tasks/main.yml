@@ -4,11 +4,6 @@
   when: ansible_os_family == 'Debian' and unbound_only_zones == false
   tags: ["packages","unbound"]
 
-- name: install unbound for RedHat OS family
-  yum: name=unbound state={{ unbound_pkg_state }}
-  when: ansible_os_family == 'RedHat' and unbound_only_zones == false
-  tags: ["packages","unbound"]
-
 - name: Ensure zones folder exist
   file: path=/etc/unbound/conf.d state=directory mode=755
   notify: restart unbound
