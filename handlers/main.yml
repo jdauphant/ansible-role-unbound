@@ -5,3 +5,5 @@
 - name: reload unbound
   service: name=unbound state=reloaded
 
+- name: reload apparmor
+  command: apparmor_parser -r /etc/apparmor.d/usr.sbin.unbound

@@ -15,8 +15,24 @@
   tags: ["configuration","unbound"]
 
 - name: Ensure log file exist
-  file: path={{unbound_logfile}} state=touch mode=755 owner=unbound
+  file:
+    path: "{{ unbound_logfile }}"
+    state: touch
+    mode: 0644
+    owner: unbound
+    modification_time: preserve
+    access_time: preserve
   notify: restart unbound
+  tags: ["configuration","unbound"]
+
+- name: Configure AppArmor for the log file
+  template:
+     src=usr.sbin.unbound.j2
+     dest="/etc/apparmor.d/local/usr.sbin.unbound"
+  notify:
+    - restart unbound
+    - reload apparmor
+  when: unbound_only_zones == false
   tags: ["configuration","unbound"]
 
 - name: configure add independant config file
@@ -25,6 +41,7 @@
      dest="/etc/unbound/conf.d/{{item}}"
   with_items:
      - 01general.conf
+     - 98stub_zone.conf
      - 99forward_zone.conf
   notify: restart unbound
   when: unbound_only_zones == false
@@ -59,4 +76,3 @@
      enabled={{ unbound_service_enabled }}
      pattern="unbound"
   tags: ["service","unbound"]
-
